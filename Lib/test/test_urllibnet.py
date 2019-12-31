@@ -225,7 +225,7 @@ class urlopen_FTPTest(unittest.TestCase):
         with test_support.transient_internet(self.FTP_TEST_FILE):
             try:
                 for _ in range(self.NUM_FTP_RETRIEVES):
-                    with tempfile.NamedTemporaryFile() as fp:
+                    with tempfile.NamedTemporaryFile(mode='w') as fp:
                         urllib.FancyURLopener().retrieve(self.FTP_TEST_FILE, fp.name)
             except IOError as e:
                 self.fail("Failed FTP retrieve while accessing ftp url "
