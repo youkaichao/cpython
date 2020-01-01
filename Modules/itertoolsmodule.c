@@ -1025,12 +1025,22 @@ cycle_next(cycleobject *lz)
 static PyObject *
 cycle_reduce(cycleobject *lz, PyObject *Py_UNUSED(ignored))
 {
-    return Py_BuildValue("O(O)(OO)", Py_TYPE(lz), lz->it, lz->iterable, Py_True);
+    return Py_BuildValue("O(O)(O)", Py_TYPE(lz), lz->it, lz->iterable);
 }
 
 static PyObject *
 cycle_setstate(cycleobject *lz, PyObject *state)
 {
+    PyObject *iterable=NULL;
+    if (!PyTuple_Check(state)) {
+        PyErr_SetString(PyExc_TypeError, "state is not a tuple");
+        return NULL;
+    }
+    if (!PyArg_ParseTuple(state, "O", &iterable)) {
+        return NULL;
+    }
+    Py_INCREF(iterable);
+    Py_XSETREF(lz->iterable, iterable);
     Py_RETURN_NONE;
 }
 
