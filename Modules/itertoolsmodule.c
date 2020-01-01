@@ -1017,7 +1017,9 @@ cycle_next(cycleobject *lz)
     }
     if (lz->iterable != NULL){
         lz->it = PyObject_GetIter(lz->iterable);
-        return cycle_next(lz);
+        /* Note: if item is NULL, it means len(lz->iterable) == 0, NULL should be returned  */
+        item = PyIter_Next(lz->it);
+        return item;
     }
     return NULL;
 }
